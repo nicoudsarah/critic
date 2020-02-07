@@ -2,3 +2,4 @@
 *.iml
 .idea/
 critic.json
+target/
