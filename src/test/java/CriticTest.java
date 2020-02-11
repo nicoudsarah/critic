@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
 import java.util.Arrays;
@@ -57,4 +58,44 @@ public class CriticTest {
         File f = new File(fileName);
         f.delete();
     }
+
+
+    @Test
+    void RepositoryContainsOneFile () throws IOException {
+        String RepositoryWithOneFilePath = "test/samples/RepositoryWithOneFile";
+        String outputCriticJSON = "test/samples/RepositoryWithOneFile/critic.json";
+        String expectedCriticJSON = "test/samples/RepositoryWithOneFile/expected.critic.json";
+
+        RemoveFile(outputCriticJSON);
+
+        Critic critic = new Critic(RepositoryWithOneFilePath);
+        critic.evaluate() ;
+        File criticPathtoFile = new File(outputCriticJSON);
+        File expectedCriticFile = new File(expectedCriticJSON);
+        assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
+    }
+
+
+    /*@Test
+    void FilesContainsCodeAndAreRelevant() {
+        String pathToNonRelevantFile = "test/samples/ExistingRegularFile";
+        File nonRelevantFile = new File(pathToNonRelevantFile);
+        int startExtensionPosition = pathToNonRelevantFile.lastIndexOf(".");
+        assertTrue(startExtensionPosition>0);
+        String nonRelevantFileExtension = pathToNonRelevantFile.substring(startExtensionPosition+1);
+        assertTrue(FileExtensionIsOK(nonRelevantFileExtension));
+    }
+
+    private boolean FileExtensionIsOK(String extensionToTest) {
+        String listOfExtensionsAccepted[] = {"java", "txt"};
+        boolean extensionMatch = false;
+        for (int i = 0; i <= listOfExtensionsAccepted.length-1; i++) {
+            if (extensionToTest.equals(listOfExtensionsAccepted[i])) {
+                extensionMatch = true ;
+            }
+        }
+        return extensionMatch;
+    }*/
+
+
 }
