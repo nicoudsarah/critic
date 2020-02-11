@@ -25,28 +25,26 @@ public class Critic {
 
         String outputEmptyContent = "{\n}";
 
-        String outputOneFileContent = "{\"folder1\": \r\n" +
+        String outputOneFileContent = "{\"RepositoryWithOneFile\": \r\n" +
                 "{\"path\":\"test/samples/RepositoryWithOneFile\", \"type\":\"repository\", \"score\":\"1\", \"content\": \r\n" +
-                "{\"file1\":{\"path\":\"test/samples/RepositoryWithOneFile/firstFile.txt\", \"type\":\"file\", \"score\":\"1\"}}}}";
+                "{\"firstFile.txt\":{\"path\":\"test/samples/RepositoryWithOneFile/firstFile.txt\", \"type\":\"file\", \"score\":\"1\"}}}}";
+
+        String outputTwoFilesContent = "{\"RepositoryWithTwoFiles\": \r\n" +
+                "{\"path\":\"test/samples/RepositoryWithTwoFiles\", \"type\":\"repository\", \"score\":\"1\", \"content\": \r\n" +
+                "{\"firstFile.txt\":{\"path\":\"test/samples/RepositoryWithTwoFiles/firstFile.txt\", \"type\":\"file\", \"score\":\"1\"},\r\n" +
+                "\"secondFile.txt\":{\"path\":\"test/samples/RepositoryWithTwoFiles/secondFile.txt\", \"type\":\"file\", \"score\":\"1\"}}}}";
+
+        String outputSubfolderWithOneFile = "{\"RepositoryContainsSubfolderWhichContainsOneFile\": \r\n" +
+                "{\"path\":\"C:\\Users\\Sarah\\IdeaProjects\\critic\\test\\samples\\RepositoryContainsSubfolderWhichContainsOneFile\", \"type\":\"repository\", \"score\":\"1\", \"content\":\r\n" +
+                "{\"SubFolderWithOneFile\":{\"path\":\"C:\\Users\\Sarah\\IdeaProjects\\critic\\test\\samples\\RepositoryContainsSubfolderWhichContainsOneFile\\SubFolderWithOneFile\", \"type\":\"repository\", \"score\":\"1\", \"content\":\r\n" +
+                "{\"firstFile.txt\":{\"path\":\"test/samples/RepositoryWithOneFile/firstFile.txt\", \"type\":\"file\", \"score\":\"1\"}}}}}}";
 
         JSONAutomaticWriter("EmptyRepository", outputEmptyContent);
-
         JSONAutomaticWriter("RepositoryWithOneFile", outputOneFileContent);
-
-        /*File criticEmptyFile = new File("test/samples/EmptyRepository/critic.json");
-        criticEmptyFile.createNewFile();
-        String outputContent = "{\n}";
-        FileOutputStream fileWriter = new FileOutputStream(criticEmptyFile);
-        fileWriter.write(outputContent.getBytes());
-
-        File criticRepositoryWithOneFile = new File("test/samples/RepositoryWithOneFile/critic.json");
-        criticRepositoryWithOneFile.createNewFile();
-        outputContent = "{\"folder1\": \r\n" +
-                "{\"path\":\"test/samples/RepositoryWithOneFile\", \"type\":\"repository\", \"score\":\"1\", \"content\": \r\n" +
-                "{\"file1\":{\"path\":\"test/samples/RepositoryWithOneFile/firstFile.txt\", \"type\":\"file\", \"score\":\"1\"}}}}";
-        fileWriter = new FileOutputStream(criticRepositoryWithOneFile);
-        fileWriter.write(outputContent.getBytes());*/
+        JSONAutomaticWriter("RepositoryWithTwoFiles", outputTwoFilesContent);
+        JSONAutomaticWriter("RepositoryContainsSubfolderWhichContainsOneFile", outputSubfolderWithOneFile);
     }
+
 
     private void JSONAutomaticWriter(String RepositoryName, String outputContent) throws IOException {
         File criticNewFile = new File("test/samples/" + RepositoryName + "/critic.json");

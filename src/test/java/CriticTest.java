@@ -59,22 +59,44 @@ public class CriticTest {
         f.delete();
     }
 
-
     @Test
     void RepositoryContainsOneFile () throws IOException {
-        String RepositoryWithOneFilePath = "test/samples/RepositoryWithOneFile";
+        String repositoryWithOneFilePath = "test/samples/RepositoryWithOneFile";
         String outputCriticJSON = "test/samples/RepositoryWithOneFile/critic.json";
         String expectedCriticJSON = "test/samples/RepositoryWithOneFile/expected.critic.json";
 
         RemoveFile(outputCriticJSON);
 
-        Critic critic = new Critic(RepositoryWithOneFilePath);
+        Critic critic = new Critic(repositoryWithOneFilePath);
         critic.evaluate() ;
-        File criticPathtoFile = new File(outputCriticJSON);
-        File expectedCriticFile = new File(expectedCriticJSON);
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }
 
+    @Test
+    void RepositoryContainsTwoFiles () throws IOException {
+        String repositoryWithTwoFilesPath = "test/samples/RepositoryWithTwoFiles";
+        String outputCriticJSON = "test/samples/RepositoryWithTwoFiles/critic.json";
+        String expectedCriticJSON = "test/samples/RepositoryWithTwoFiles/expected.critic.json";
+
+        RemoveFile(outputCriticJSON);
+
+        Critic critic = new Critic(repositoryWithTwoFilesPath);
+        critic.evaluate() ;
+        assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
+    }
+
+    @Test
+    void RepositoryContainsSubfolderWhichContainsOneFile () throws IOException {
+        String RepositoryContainsSubfolderWhichContainsOneFilePath = "test/samples/RepositoryContainsSubfolderWhichContainsOneFile";
+        String outputCriticJSON = "test/samples/RepositoryContainsSubfolderWhichContainsOneFile/critic.json";
+        String expectedCriticJSON = "test/samples/RepositoryContainsSubfolderWhichContainsOneFile/expected.critic.json";
+
+        RemoveFile(outputCriticJSON);
+
+        Critic critic = new Critic(RepositoryContainsSubfolderWhichContainsOneFilePath);
+        critic.evaluate() ;
+        assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
+    }
 
     /*@Test
     void FilesContainsCodeAndAreRelevant() {

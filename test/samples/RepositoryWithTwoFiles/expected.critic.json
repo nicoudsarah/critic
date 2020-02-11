@@ -1,0 +1,4 @@
+{"RepositoryWithTwoFiles": 
+{"path":"test/samples/RepositoryWithTwoFiles", "type":"repository", "score":"1", "content": 
+{"firstFile.txt":{"path":"test/samples/RepositoryWithTwoFiles/firstFile.txt", "type":"file", "score":"1"},
+"secondFile.txt":{"path":"test/samples/RepositoryWithTwoFiles/secondFile.txt", "type":"file", "score":"1"}}}}
