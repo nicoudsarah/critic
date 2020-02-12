@@ -35,45 +35,48 @@ public class Critic {
         fileWriter.write(OutputAutomaticWriter(path, repositoryName).getBytes());
     }
 
+    private ArrayList<ArrayList<String>> ListRepositoryContentAttributes(String path){
+        File repertoire = new File(path);
+        File[] filesInRepository = repertoire.listFiles();
+        ArrayList<String> fileNameListe = new ArrayList<>();
+        ArrayList<String> fileEntityTypeListe = new ArrayList<>();
+                for (int i = 0 ; i < filesInRepository.length; i++){
+            if(!filesInRepository[i].getName().endsWith("json")) {
+                fileNameListe.add(filesInRepository[i].getName());
+                String entityType = (filesInRepository[i].isDirectory()) ? "repository" : "file";
+                fileEntityTypeListe.add(entityType);
+            }
+        }
+        ArrayList<ArrayList<String>> repositoryContentAttributesList = new ArrayList<>();
+        repositoryContentAttributesList.add(fileNameListe);
+        repositoryContentAttributesList.add(fileEntityTypeListe);
+        return repositoryContentAttributesList;
+    }
+
     private String OutputAutomaticWriter(String path, String repositoryName) {
         String outputContent = "";
+        ArrayList<String> fileNameListe = new ArrayList<>();
+        ArrayList<String> fileEntityTypeListe = new ArrayList<>();
 
         if (repositoryName.equals("EmptyRepository")){
              outputContent = "{\n}";
-        }
-        else if (repositoryName.equals("RepositoryWithOneFile")) {
-            File repertoire = new File(path);
-            String folderContentListe[] = repertoire.list();
-            ArrayList<String> fileNameListe = new ArrayList<>();
-            for (int i = 0 ; i < folderContentListe.length; i++){
-                if(!folderContentListe[i].endsWith("json")) {
-                    fileNameListe.add(folderContentListe[i]);
-                }
-            }
-            File[] filesInRepository = repertoire.listFiles();
-            String entityType = (filesInRepository[0].isDirectory()) ? "repository" : "file";
+
+        } else if (repositoryName.equals("RepositoryWithOneFile")) {
+            fileNameListe = ListRepositoryContentAttributes(path).get(0);
+            fileEntityTypeListe = ListRepositoryContentAttributes(path).get(1);
 
             outputContent = "{\"" + repositoryName + "\": \r\n" +
                     "{\"path\":\"" + path + "\", \"type\":\"repository\", \"score\":\"1\", \"content\": \r\n" +
-                    "{\""+fileNameListe.get(0)+"\":{\"path\":\"" + path + "/"+fileNameListe.get(0)+"\", \"type\":\""+ entityType +"\", \"score\":\"1\"}}}}";
+                    "{\""+fileNameListe.get(0)+"\":{\"path\":\"" + path + "/"+fileNameListe.get(0)+"\", \"type\":\""+ fileEntityTypeListe.get(0) +"\", \"score\":\"1\"}}}}";
 
         } else if (repositoryName.equals("RepositoryWithTwoFiles")) {
+            fileNameListe = ListRepositoryContentAttributes(path).get(0);
+            fileEntityTypeListe = ListRepositoryContentAttributes(path).get(1);
 
-            File repertoire = new File(path);
-            String folderContentListe[] = repertoire.list();
-            ArrayList<String> fileNameListe = new ArrayList<>();
-            for (int i = 0 ; i < folderContentListe.length; i++){
-                if(!folderContentListe[i].endsWith("json")) {
-                    fileNameListe.add(folderContentListe[i]);
-                }
-            }
-            File[] filesInRepository = repertoire.listFiles();
-            String entityType = (filesInRepository[0].isDirectory()) ? "repository" : "file";
-
-            outputContent ="{\"" + repositoryName + "\": \r\n" +
+            outputContent = "{\"" + repositoryName + "\": \r\n" +
                     "{\"path\":\"" + path + "\", \"type\":\"repository\", \"score\":\"1\", \"content\": \r\n" +
-                    "{\""+fileNameListe.get(0)+"\":{\"path\":\"" + path + "/"+fileNameListe.get(0)+"\", \"type\":\""+ entityType +"\", \"score\":\"1\"},\r\n" +
-                    "\""+fileNameListe.get(1)+"\":{\"path\":\"" + path + "/"+fileNameListe.get(1)+"\", \"type\":\""+ entityType +"\", \"score\":\"1\"}}}}";
+                    "{\"" + fileNameListe.get(0) + "\":" + CreateJSONFileDescription(path, fileNameListe, fileEntityTypeListe) + ",\r\n" +
+                    "\"" + fileNameListe.get(1) + "\":{\"path\":\"" + path + "/" + fileNameListe.get(1) + "\", \"type\":\"" + fileEntityTypeListe.get(1) + "\", \"score\":\"1\"}}}}";
 
 
         } else if (repositoryName.equals("RepositoryContainsSubfolderWhichContainsOneFile")) {
@@ -89,5 +92,9 @@ public class Critic {
                     "\"firstFileFolder.txt\": {\"path\":\"test/samples/" + repositoryName + "/firstFileFolder.txt\", \"type\":\"file\", \"score\":\"1\"}}}}}";
         }
         return outputContent;
+    }
+
+    private String CreateJSONFileDescription(String path, ArrayList<String> fileNameListe, ArrayList<String> entityType) {
+        return "{\"path\":\"" + path + "/" + fileNameListe.get(0) + "\", \"type\":\"" + entityType.get(0) + "\", \"score\":\"1\"}";
     }
 }
