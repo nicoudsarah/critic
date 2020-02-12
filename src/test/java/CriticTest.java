@@ -72,7 +72,7 @@ public class CriticTest {
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }
 
-   /* @Test
+    @Test
     void RepositoryContainsTwoFiles () throws IOException {
         String repositoryWithTwoFilesPath = "test/samples/RepositoryWithTwoFiles";
         String outputCriticJSON = "test/samples/RepositoryWithTwoFiles/critic.json";
@@ -85,7 +85,7 @@ public class CriticTest {
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }
 
-    @Test
+    /*@Test
     void RepositoryContainsSubfolderWhichContainsOneFile () throws IOException {
         String RepositoryContainsSubfolderWhichContainsOneFilePath = "test/samples/RepositoryContainsSubfolderWhichContainsOneFile";
         String outputCriticJSON = "test/samples/RepositoryContainsSubfolderWhichContainsOneFile/critic.json";
@@ -96,9 +96,9 @@ public class CriticTest {
         Critic critic = new Critic(RepositoryContainsSubfolderWhichContainsOneFilePath);
         critic.evaluate() ;
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
-    }
+    }*/
 
-    @Test
+   /* @Test
     void RepositoryContainsSubfolderAndOneFile () throws IOException {
         String RepositoryContainsSubfolderAndOneFilePath = "test/samples/RepositoryContainsSubfolderAndOneFile";
         String outputCriticJSON = "test/samples/RepositoryContainsSubfolderAndOneFile/critic.json";
@@ -110,27 +110,4 @@ public class CriticTest {
         critic.evaluate() ;
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }*/
-
-    /*@Test
-    void FilesContainsCodeAndAreRelevant() {
-        String pathToNonRelevantFile = "test/samples/ExistingRegularFile";
-        File nonRelevantFile = new File(pathToNonRelevantFile);
-        int startExtensionPosition = pathToNonRelevantFile.lastIndexOf(".");
-        assertTrue(startExtensionPosition>0);
-        String nonRelevantFileExtension = pathToNonRelevantFile.substring(startExtensionPosition+1);
-        assertTrue(FileExtensionIsOK(nonRelevantFileExtension));
-    }
-
-    private boolean FileExtensionIsOK(String extensionToTest) {
-        String listOfExtensionsAccepted[] = {"java", "txt"};
-        boolean extensionMatch = false;
-        for (int i = 0; i <= listOfExtensionsAccepted.length-1; i++) {
-            if (extensionToTest.equals(listOfExtensionsAccepted[i])) {
-                extensionMatch = true ;
-            }
-        }
-        return extensionMatch;
-    }*/
-
-
 }
