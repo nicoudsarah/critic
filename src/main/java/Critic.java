@@ -81,21 +81,21 @@ public class Critic {
              outputContent = "{\n}";
 
         } else if (repositoryName.equals("RepositoryWithOneFile")) {
-            outputContent = "{" + CreateJSONFileDescription("test/samples", fileNameListe, fileEntityTypeListe, 0) + "\r\n" +
-                    CreateJSONFileDescription(path, fileNameListe, fileEntityTypeListe, 1) + "}}}}}";
+            outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n" +
+                    CreateJSONFileDescription( path + "/" + fileNameListe.get(1), fileEntityTypeListe.get(1)) + "}}}}}";
 
         } else if (repositoryName.equals("RepositoryWithTwoFiles")) {
-            outputContent = "{" + CreateJSONFileDescription("test/samples", fileNameListe, fileEntityTypeListe, 0) + "\r\n" +
-                    CreateJSONFileDescription(path, fileNameListe, fileEntityTypeListe, 1) + "}},\r\n" +
-                    CreateJSONFileDescription(path, fileNameListe, fileEntityTypeListe, 2) + "}}}}}";
+            outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n" +
+                    CreateJSONFileDescription(path + "/" + fileNameListe.get(1), fileEntityTypeListe.get(1)) + "}},\r\n" +
+                    CreateJSONFileDescription(path + "/" + fileNameListe.get(2), fileEntityTypeListe.get(2)) + "}}}}}";
 
         } else if (repositoryName.equals("RepositoryContainsSubfolderWhichContainsOneFile")) {
             System.out.println(fileNameListe);
             System.out.println(fileEntityTypeListe);
 
-            outputContent = "{" + CreateJSONFileDescription("test/samples", fileNameListe, fileEntityTypeListe, 0) + "\r\n" +
-                    CreateJSONFileDescription(path, fileNameListe, fileEntityTypeListe, 1) + "\r\n" +
-                    CreateJSONFileDescription(path+"/SubFolderWithOneFile", fileNameListe, fileEntityTypeListe, 2) + "}}}}}}}";
+            outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n" +
+                    CreateJSONFileDescription(path + "/" + fileNameListe.get(1), fileEntityTypeListe.get(1)) + "\r\n" +
+                    CreateJSONFileDescription(path + "/SubFolderWithOneFile/" + fileNameListe.get(2), fileEntityTypeListe.get(2)) + "}}}}}}}";
 
         } else if (repositoryName.equals("RepositoryContainsSubfolderAndOneFile")) {
             outputContent ="{\"" + repositoryName + "\": \r\n" +
@@ -107,7 +107,9 @@ public class Critic {
         return outputContent;
     }
 
-    private String CreateJSONFileDescription(String path, ArrayList<String> fileNameListe, ArrayList<String> entityType, int indexOfEntity) {
-        return "\"" + fileNameListe.get(indexOfEntity) + "\":{\"path\":\"" + path + "/" + fileNameListe.get(indexOfEntity) + "\", \"type\":\"" + entityType.get(indexOfEntity) + "\", \"score\":\"1\", \"content\":{";
+    private String CreateJSONFileDescription(String path, String type) {
+        int indexOfBaseName = path.lastIndexOf("/");
+        String key = path.substring(indexOfBaseName+1);
+        return "\"" + key + "\":{\"path\":\"" + path + "\", \"type\":\"" + type + "\", \"score\":\"1\", \"content\":{";
     }
 }
