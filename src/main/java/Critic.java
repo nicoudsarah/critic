@@ -74,18 +74,16 @@ public class Critic {
 
         fileNameListe = ListRepositoryContentAttributes(path, repositoryName).get(0);
         fileEntityTypeListe = ListRepositoryContentAttributes(path, repositoryName).get(1);
+        int listSize = fileNameListe.size()-1;
 
         if (repositoryName.equals("EmptyRepository")){
              outputContent = "{\n}";
 
-        } else if (repositoryName.equals("RepositoryWithOneFile")) {
-            outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n" +
-                    CreateJSONFileDescription( path + "/" + fileNameListe.get(1), fileEntityTypeListe.get(1)) + "}}}}}";
-
-        } else if (repositoryName.equals("RepositoryWithTwoFiles")) {
-            outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n" +
-                    CreateJSONFileDescription(path + "/" + fileNameListe.get(1), fileEntityTypeListe.get(1)) + "}},\r\n" +
-                    CreateJSONFileDescription(path + "/" + fileNameListe.get(2), fileEntityTypeListe.get(2)) + "}}}}}";
+        } else if (repositoryName.contains("RepositoryWith")) {
+            outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n";
+            for (int i=1; i<=listSize ; i++) {
+                outputContent += CreateJSONFileDescription(path + "/" + fileNameListe.get(i), fileEntityTypeListe.get(i)) + ((i != listSize) ? "}},\r\n" : "}}}}}" );
+            }
 
         } else if (repositoryName.equals("RepositoryContainsSubfolderWhichContainsOneFile")) {
 
