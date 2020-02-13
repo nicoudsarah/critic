@@ -75,8 +75,6 @@ public class Critic {
         fileNameListe = ListRepositoryContentAttributes(path, repositoryName).get(0);
         fileEntityTypeListe = ListRepositoryContentAttributes(path, repositoryName).get(1);
 
-        System.out.println(fileNameListe);
-
         if (repositoryName.equals("EmptyRepository")){
              outputContent = "{\n}";
 
@@ -90,8 +88,6 @@ public class Critic {
                     CreateJSONFileDescription(path + "/" + fileNameListe.get(2), fileEntityTypeListe.get(2)) + "}}}}}";
 
         } else if (repositoryName.equals("RepositoryContainsSubfolderWhichContainsOneFile")) {
-            System.out.println(fileNameListe);
-            System.out.println(fileEntityTypeListe);
 
             outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n" +
                     CreateJSONFileDescription(path + "/" + fileNameListe.get(1), fileEntityTypeListe.get(1)) + "\r\n" +
