@@ -35,59 +35,11 @@ public class Critic {
         fileWriter.write(OutputAutomaticWriter(path, repositoryName).getBytes());
     }
 
-    private ArrayList<ArrayList<String>> ListRepositoryContentAttributes(String path, String repositoryName){
-        ArrayList<String> filePathList = new ArrayList<>();
-        ArrayList<String> fileEntityTypeListe = new ArrayList<>();
-        ArrayList<ArrayList<String>> repositoryContentAttributesList = new ArrayList<>();
-
-        filePathList.add(path);
-        fileEntityTypeListe.add("repository");
-
-        ReadFolder(path, filePathList, fileEntityTypeListe);
-
-        repositoryContentAttributesList.add(filePathList);
-        repositoryContentAttributesList.add(fileEntityTypeListe);
-
-        return repositoryContentAttributesList;
-    }
-
-    private void ReadFolder(String path, ArrayList<String> filePathList, ArrayList<String> fileEntityTypeListe) {
-        File repertoire = new File(path);
-        File[] filesInRepository = repertoire.listFiles();
-
-        for (int i = 0 ; i < filesInRepository.length; i++){
-            if(filesInRepository[i].isFile() && !filesInRepository[i].getName().endsWith("json")) {
-                filePathList.add(filesInRepository[i].getPath());
-                fileEntityTypeListe.add("file");
-            }
-            else if (filesInRepository[i].isDirectory()) {
-                filePathList.add(filesInRepository[i].getPath());
-                fileEntityTypeListe.add("repository");
-                String subfolderPath = filesInRepository[i].getPath();
-                File subFolder = new File(subfolderPath);
-                filesInRepository = subFolder.listFiles();
-                ReadFolder(subfolderPath, filePathList, fileEntityTypeListe);
-            }
-        }
-    }
-
     private String OutputAutomaticWriter(String path, String repositoryName) {
         String outputContent = "";
-        ArrayList<String> filePathList = new ArrayList<>();
-        ArrayList<String> fileEntityTypeListe = new ArrayList<>();
-
-        filePathList = ListRepositoryContentAttributes(path, repositoryName).get(0);
-        fileEntityTypeListe = ListRepositoryContentAttributes(path, repositoryName).get(1);
-        int listSize = filePathList.size()-1;
 
         if (repositoryName.equals("EmptyRepository") || repositoryName.equals("RepositoryWithOneFile") || repositoryName.equals("RepositoryWithTwoFiles") || repositoryName.equals("RepositoryContainsSubfolderWhichContainsOneFile")) {
              outputContent = GenerateJSON(path);
-
-        } else if (repositoryName.equals("RepositoryContainsSubfolderWhichContainsOneFile")) {
-
-            outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n" +
-                    CreateJSONFileDescription(filePathList.get(1), fileEntityTypeListe.get(1)) + "\r\n" +
-                    CreateJSONFileDescription(filePathList.get(2), fileEntityTypeListe.get(2)) + "}}}}}}}";
 
         } else if (repositoryName.equals("RepositoryContainsSubfolderAndOneFile")) {
             outputContent ="{\"" + repositoryName + "\": \r\n" +
@@ -103,6 +55,7 @@ public class Critic {
         ArrayList<File> filesToAnalyze = new ArrayList<>();
         for (int i = 0 ; i < filesInRepository.length; i++) {
             String name = filesInRepository[i].getName();
+            // XXX rustine
             if (filesInRepository[i].isFile() && !name.endsWith("json") && !name.startsWith(".")) {
                 filesToAnalyze.add(filesInRepository[i]);
             }
@@ -121,7 +74,6 @@ public class Critic {
 
         ArrayList<File> filesToAnalyze = shallFileBeAnalyzed(filesInRepository);
 
-            // XXX : This is a rustine
         for (int i = 0 ; i < filesToAnalyze.size(); i++) {
             String fileName = filesToAnalyze.get(i).getName();
             if (filesToAnalyze.get(i).isDirectory()){
@@ -179,12 +131,5 @@ public class Critic {
                 GenerateFileInSubfolderDescription("firstFile.txt") +
                 "\t\t\t\t}\n" +
                 "\t\t\t]\n";
-    }
-
-    private String CreateJSONFileDescription(String path, String type) {
-        path = path.replace("\\", "/");
-        int indexOfBaseName = path.lastIndexOf("/");
-        String key = path.substring(indexOfBaseName+1);
-        return "\"" + key + "\":{\"path\":\"" + path + "\", \"type\":\"" + type + "\", \"score\":\"1\", \"content\":{";
     }
 }
