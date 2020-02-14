@@ -80,8 +80,8 @@ public class Critic {
         fileEntityTypeListe = ListRepositoryContentAttributes(path, repositoryName).get(1);
         int listSize = filePathList.size()-1;
 
-        if (repositoryName.equals("EmptyRepository")){
-             outputContent = "{\n}";
+        if (repositoryName.equals("EmptyRepository")) {
+             outputContent = GenerateJSON(path);
 
         } else if (repositoryName.contains("RepositoryWith")) {
             outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n";
@@ -103,6 +103,10 @@ public class Critic {
                     "\"firstFileFolder.txt\": {\"path\":\"test/samples/" + repositoryName + "/firstFileFolder.txt\", \"type\":\"file\", \"score\":\"1\"}}}}}";
         }
         return outputContent;
+    }
+
+    private String GenerateJSON(String path) {
+        return "{\n}";
     }
 
     private String CreateJSONFileDescription(String path, String type) {
