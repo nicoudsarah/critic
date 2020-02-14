@@ -1,2 +1,16 @@
-{"RepositoryWithOneFile":{"path":"test/samples/RepositoryWithOneFile", "type":"repository", "score":"1", "content":{
-"firstFile.txt":{"path":"test/samples/RepositoryWithOneFile/firstFile.txt", "type":"file", "score":"1", "content":{}}}}}
+{
+	"path" : "test/samples/RepositoryWithOneFile",
+	"type" : "directory",
+	"score" : "1",
+	"content" : [
+		{
+			"path" : "firstFile.txt",
+			"type" : "file",
+			"score" : "1",
+			"content" : [
+				{
+				}
+			]
+		}
+	]
+}

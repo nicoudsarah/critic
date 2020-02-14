@@ -80,7 +80,7 @@ public class Critic {
         fileEntityTypeListe = ListRepositoryContentAttributes(path, repositoryName).get(1);
         int listSize = filePathList.size()-1;
 
-        if (repositoryName.equals("EmptyRepository")) {
+        if (repositoryName.equals("EmptyRepository") || repositoryName.equals("RepositoryWithOneFile")) {
              outputContent = GenerateJSON(path);
 
         } else if (repositoryName.contains("RepositoryWith")) {
@@ -105,13 +105,44 @@ public class Critic {
         return outputContent;
     }
 
+    private boolean shallFileBeAnalyzed(File file) {
+        String name = file.getName();
+        return file.isFile() && !name.endsWith("json") && !name.startsWith(".");
+    }
+
     private String GenerateJSON(String path) {
+        String content = "";
+
+        File repository = new File(path);
+        File[] filesInRepository = repository.listFiles();
+
+        for (int i = 0 ; i < filesInRepository.length; i++){
+            // XXX : This is a rustine
+            if(shallFileBeAnalyzed(filesInRepository[i])) {
+                content = GenerateFileDescription();
+            }
+        }
+
         return "{\n" +
-                "\t\"path\" : \"test/samples/EmptyRepository\",\n" +
+                "\t\"path\" : \""+ path +"\",\n" +
                 "\t\"type\" : \"directory\",\n" +
                 "\t\"score\" : \"1\",\n" +
-                "\t\"content\" : [ {} ]\n" +
+                "\t\"content\" : [\n" +
+                "\t\t{\n" +
+                content +
+                "\t\t}\n" +
+                "\t]\n" +
                 "}\n";
+    }
+
+    private String GenerateFileDescription() {
+        return "\t\t\t\"path\" : \"firstFile.txt\",\n" +
+                "\t\t\t\"type\" : \"file\",\n" +
+                "\t\t\t\"score\" : \"1\",\n" +
+                "\t\t\t\"content\" : [\n" +
+                "\t\t\t\t{\n" +
+                "\t\t\t\t}\n" +
+                "\t\t\t]\n";
     }
 
     private String CreateJSONFileDescription(String path, String type) {
