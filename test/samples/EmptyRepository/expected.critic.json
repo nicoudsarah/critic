@@ -1,2 +1,6 @@
 {
+	"path" : "test/samples/EmptyRepository",
+	"type" : "directory",
+	"score" : "1",
+	"content" : [ {} ]
 }

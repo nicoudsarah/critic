@@ -106,7 +106,12 @@ public class Critic {
     }
 
     private String GenerateJSON(String path) {
-        return "{\n}";
+        return "{\n" +
+                "\t\"path\" : \"test/samples/EmptyRepository\",\n" +
+                "\t\"type\" : \"directory\",\n" +
+                "\t\"score\" : \"1\",\n" +
+                "\t\"content\" : [ {} ]\n" +
+                "}\n";
     }
 
     private String CreateJSONFileDescription(String path, String type) {
