@@ -98,6 +98,19 @@ public class CriticTest {
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }
 
+    @Test
+    void RepositoryContainsSubfolderWhichContainsTwoFiles () throws IOException {
+        String RepositoryContainsSubfolderWhichContainsTwoFilesPath = "test/samples/RepositoryContainsSubfolderWhichContainsTwoFiles";
+        String outputCriticJSON = "test/samples/RepositoryContainsSubfolderWhichContainsTwoFiles/critic.json";
+        String expectedCriticJSON = "test/samples/RepositoryContainsSubfolderWhichContainsTwoFiles/expected.critic.json";
+
+        RemoveFile(outputCriticJSON);
+
+        Critic critic = new Critic(RepositoryContainsSubfolderWhichContainsTwoFilesPath);
+        critic.evaluate() ;
+        assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
+    }
+
    /* @Test
     void RepositoryContainsSubfolderAndOneFile () throws IOException {
         String RepositoryContainsSubfolderAndOneFilePath = "test/samples/RepositoryContainsSubfolderAndOneFile";

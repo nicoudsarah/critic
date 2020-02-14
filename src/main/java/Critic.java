@@ -38,17 +38,15 @@ public class Critic {
     private String OutputAutomaticWriter(String path, String repositoryName) {
         String outputContent = "";
 
-        if (repositoryName.equals("EmptyRepository") || repositoryName.equals("RepositoryWithOneFile") || repositoryName.equals("RepositoryWithTwoFiles") || repositoryName.equals("RepositoryContainsSubfolderWhichContainsOneFile")) {
-             outputContent = GenerateJSON(path);
-
-        } else if (repositoryName.equals("RepositoryContainsSubfolderAndOneFile")) {
+        if (repositoryName.equals("RepositoryContainsSubfolderAndOneFile")) {
             outputContent ="{\"" + repositoryName + "\": \r\n" +
                     "{\"path\":\"test/samples/" + repositoryName + "\", \"type\":\"repository\", \"score\":\"1\", \"content\":\r\n" +
                     "{\"SubFolderWithOneFile\":{\"path\":\"test/samples/" + repositoryName + "/SubFolderWithOneFile\", \"type\":\"repository\", \"score\":\"1\", \"content\":\r\n" +
                     "{\"firstFileSubfolder.txt\":{\"path\":\"test/samples/" + repositoryName + "/SubFolderWithOneFile/firstFileSubfolder.txt\", \"type\":\"file\", \"score\":\"1\"}}\r\n" +
                     "\"firstFileFolder.txt\": {\"path\":\"test/samples/" + repositoryName + "/firstFileFolder.txt\", \"type\":\"file\", \"score\":\"1\"}}}}}";
         }
-        return outputContent;
+
+        return outputContent = GenerateJSON(path);
     }
 
     private ArrayList<File> shallFileBeAnalyzed(File[] filesInRepository) {
@@ -77,7 +75,8 @@ public class Critic {
         for (int i = 0 ; i < filesToAnalyze.size(); i++) {
             String fileName = filesToAnalyze.get(i).getName();
             if (filesToAnalyze.get(i).isDirectory()){
-                content += GenerateDirectoryDescription(fileName);
+                File[] subfilesList = filesToAnalyze.get(i).listFiles();
+                content += GenerateDirectoryDescription(fileName, subfilesList);
             }
             else {
                 content += GenerateFileDescription(fileName);
@@ -122,14 +121,27 @@ public class Critic {
                tabs.repeat(nbOfLevel) + "\t\t\t]\n";
     }
 
-    private String GenerateDirectoryDescription(String fileName) {
+    private String GenerateDirectoryDescription(String fileName, File[] subfilesList) {
         return "\t\t\t\"path\" : \""+ fileName +"\",\n" +
                 "\t\t\t\"type\" : \"directory\",\n" +
                 "\t\t\t\"score\" : \"1\",\n" +
                 "\t\t\t\"content\" : [\n" +
                 "\t\t\t\t{\n" +
-                GenerateFileInSubfolderDescription("firstFile.txt") +
+                CallSubfilesDescription(subfilesList) +
                 "\t\t\t\t}\n" +
                 "\t\t\t]\n";
     }
+
+    private String CallSubfilesDescription(File[] subfilesList) {
+        String description="";
+        for (int i = 0; i < subfilesList.length; i++) {
+            description += GenerateFileInSubfolderDescription(subfilesList[i].getName());
+            if(i<subfilesList.length-1) {
+                description += "\t\t\t\t},\n" +
+                        "\t\t\t\t{\n";
+            }
+        }
+        return description;
+    }
+
 }
