@@ -1,3 +1,23 @@
-{"RepositoryContainsSubfolderWhichContainsOneFile":{"path":"test/samples/RepositoryContainsSubfolderWhichContainsOneFile", "type":"repository", "score":"1", "content":{
-"SubFolderWithOneFile":{"path":"test/samples/RepositoryContainsSubfolderWhichContainsOneFile/SubFolderWithOneFile", "type":"repository", "score":"1", "content":{
-"firstFile.txt":{"path":"test/samples/RepositoryContainsSubfolderWhichContainsOneFile/SubFolderWithOneFile/firstFile.txt", "type":"file", "score":"1", "content":{}}}}}}}
+{
+	"path" : "test/samples/RepositoryContainsSubfolderWhichContainsOneFile",
+	"type" : "directory",
+	"score" : "1",
+	"content" : [
+		{
+			"path" : "SubFolderWithOneFile",
+			"type" : "directory",
+			"score" : "1",
+			"content" : [
+				{
+					"path" : "firstFile.txt",
+					"type" : "file",
+					"score" : "1",
+					"content" : [
+						{
+						}
+					]
+				}
+			]
+		}
+	]
+}
