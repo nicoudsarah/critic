@@ -38,13 +38,13 @@ public class Critic {
     private String OutputAutomaticWriter(String path, String repositoryName) {
         String outputContent = "";
 
-        if (repositoryName.equals("RepositoryContainsSubfolderAndOneFile")) {
+        /*if (repositoryName.equals("RepositoryContainsSubfolderAndOneFile")) {
             outputContent ="{\"" + repositoryName + "\": \r\n" +
                     "{\"path\":\"test/samples/" + repositoryName + "\", \"type\":\"repository\", \"score\":\"1\", \"content\":\r\n" +
                     "{\"SubFolderWithOneFile\":{\"path\":\"test/samples/" + repositoryName + "/SubFolderWithOneFile\", \"type\":\"repository\", \"score\":\"1\", \"content\":\r\n" +
                     "{\"firstFileSubfolder.txt\":{\"path\":\"test/samples/" + repositoryName + "/SubFolderWithOneFile/firstFileSubfolder.txt\", \"type\":\"file\", \"score\":\"1\"}}\r\n" +
                     "\"firstFileFolder.txt\": {\"path\":\"test/samples/" + repositoryName + "/firstFileFolder.txt\", \"type\":\"file\", \"score\":\"1\"}}}}}";
-        }
+        }*/
 
         return outputContent = GenerateJSON(path);
     }
@@ -135,11 +135,17 @@ public class Critic {
     private String CallSubfilesDescription(File[] subfilesList) {
         String description="";
         for (int i = 0; i < subfilesList.length; i++) {
-            description += GenerateFileInSubfolderDescription(subfilesList[i].getName());
-            if(i<subfilesList.length-1) {
-                description += "\t\t\t\t},\n" +
-                        "\t\t\t\t{\n";
+            if (subfilesList[i].isFile()) {
+                description += GenerateFileInSubfolderDescription(subfilesList[i].getName());
+                if(i<subfilesList.length-1) {
+                    description += "\t\t\t\t},\n" +
+                            "\t\t\t\t{\n";
+                }
             }
+            else {
+                description += GenerateDirectoryDescription(subfilesList[i].getName(), subfilesList);
+            }
+
         }
         return description;
     }
