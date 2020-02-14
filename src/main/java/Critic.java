@@ -80,14 +80,8 @@ public class Critic {
         fileEntityTypeListe = ListRepositoryContentAttributes(path, repositoryName).get(1);
         int listSize = filePathList.size()-1;
 
-        if (repositoryName.equals("EmptyRepository") || repositoryName.equals("RepositoryWithOneFile")) {
+        if (repositoryName.equals("EmptyRepository") || repositoryName.equals("RepositoryWithOneFile") || repositoryName.equals("RepositoryWithTwoFiles")) {
              outputContent = GenerateJSON(path);
-
-        } else if (repositoryName.contains("RepositoryWith")) {
-            outputContent = "{" + CreateJSONFileDescription(path, fileEntityTypeListe.get(0)) + "\r\n";
-            for (int i=1; i<=listSize ; i++) {
-                outputContent += CreateJSONFileDescription(filePathList.get(i), fileEntityTypeListe.get(i)) + ((i != listSize) ? "}},\r\n" : "}}}}}" );
-            }
 
         } else if (repositoryName.equals("RepositoryContainsSubfolderWhichContainsOneFile")) {
 
@@ -105,9 +99,15 @@ public class Critic {
         return outputContent;
     }
 
-    private boolean shallFileBeAnalyzed(File file) {
-        String name = file.getName();
-        return file.isFile() && !name.endsWith("json") && !name.startsWith(".");
+    private ArrayList<File> shallFileBeAnalyzed(File[] filesInRepository) {
+        ArrayList<File> filesToAnalyze = new ArrayList<>();
+        for (int i = 0 ; i < filesInRepository.length; i++) {
+            String name = filesInRepository[i].getName();
+            if (filesInRepository[i].isFile() && !name.endsWith("json") && !name.startsWith(".")) {
+                filesToAnalyze.add(filesInRepository[i]);
+            }
+        }
+        return filesToAnalyze;
     }
 
     private String GenerateJSON(String path) {
@@ -115,11 +115,15 @@ public class Critic {
 
         File repository = new File(path);
         File[] filesInRepository = repository.listFiles();
+        ArrayList<File> filesToAnalyze = shallFileBeAnalyzed(filesInRepository);
 
-        for (int i = 0 ; i < filesInRepository.length; i++){
             // XXX : This is a rustine
-            if(shallFileBeAnalyzed(filesInRepository[i])) {
-                content = GenerateFileDescription();
+        for (int i = 0 ; i < filesToAnalyze.size(); i++) {
+            String fileName = filesToAnalyze.get(i).getName();
+            content += GenerateFileDescription(fileName);
+            if(i<filesToAnalyze.size()-1) {
+                content += "\t\t},\n" +
+                        "\t\t{\n";
             }
         }
 
@@ -135,8 +139,8 @@ public class Critic {
                 "}\n";
     }
 
-    private String GenerateFileDescription() {
-        return "\t\t\t\"path\" : \"firstFile.txt\",\n" +
+    private String GenerateFileDescription(String fileName) {
+        return "\t\t\t\"path\" : \""+ fileName +"\",\n" +
                 "\t\t\t\"type\" : \"file\",\n" +
                 "\t\t\t\"score\" : \"1\",\n" +
                 "\t\t\t\"content\" : [\n" +
