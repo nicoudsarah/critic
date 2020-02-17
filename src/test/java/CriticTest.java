@@ -137,7 +137,7 @@ public class CriticTest {
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }
 
-    @Test
+   /* @Test
     void ThreeSubfolders () throws IOException {
         String ThreeSubfoldersPath = "test/samples/ThreeSubfolders";
         String outputCriticJSON = "test/samples/ThreeSubfolders/critic.json";
@@ -146,6 +146,19 @@ public class CriticTest {
         RemoveFile(outputCriticJSON);
 
         Critic critic = new Critic(ThreeSubfoldersPath);
+        critic.evaluate() ;
+        assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
+    }*/
+
+    @Test
+    void RepositoryWithOneFileCounter () throws IOException {
+        String RepositoryWithOneFileCounterPath = "test/samples/RepositoryWithOneFileCounter";
+        String outputCriticJSON = "test/samples/RepositoryWithOneFileCounter/critic.json";
+        String expectedCriticJSON = "test/samples/RepositoryWithOneFileCounter/expected.critic.json";
+
+        RemoveFile(outputCriticJSON);
+
+        Critic critic = new Critic(RepositoryWithOneFileCounterPath);
         critic.evaluate() ;
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }

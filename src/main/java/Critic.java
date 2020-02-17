@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,7 +49,7 @@ public class Critic {
         return filesToAnalyze;
     }
 
-    private String GenerateJSON(String path) {
+    private String GenerateJSON(String path) throws IOException {
         String content = GenerateJSONContent(path);
         return "{\n" +
                 "\t\"path\" : \""+ path +"\",\n" +
@@ -66,7 +63,7 @@ public class Critic {
                 "}\n";
     }
 
-    private String GenerateJSONContent(String path) {
+    private String GenerateJSONContent(String path) throws IOException {
         StringBuilder content = new StringBuilder();
         File repository = new File(path);
         File[] filesInRepository = repository.listFiles();
@@ -85,10 +82,12 @@ public class Critic {
                 Path folderpath = Paths.get(directory.getPath());
                 nbOfLevel = folderpath.getNameCount() - nbElementInRootPath;
                 content.append(GenerateDirectoryDescription(fileName, directory));
+                //XXX Verifier si c'est une rustine
                 nbOfLevel = nbOfLevel-1;
             }
             else {
-                content.append(GenerateFileDescription(fileName));
+                int score = getScore(filesToAnalyze, i);
+                content.append(GenerateFileDescription(fileName, score));
                 if(i<filesToAnalyze.size()-1) {
                     content.append(tabs.repeat(nbOfLevel)).append("\t\t},\n").append(tabs.repeat(nbOfLevel)).append("\t\t{\n");
                 }
@@ -97,17 +96,26 @@ public class Critic {
         return content.toString();
     }
 
-    private String GenerateFileDescription(String fileName) {
+    private int getScore(ArrayList<File> filesToAnalyze, int i) throws IOException {
+        int score = 0;
+        BufferedReader fileEvaluation = new BufferedReader(new FileReader(filesToAnalyze.get(i).getPath()));
+        while(fileEvaluation.readLine() != null){
+            score ++;
+        }
+        return score;
+    }
+
+    private String GenerateFileDescription(String fileName, int fileScore) {
         return tabs.repeat(nbOfLevel) + "\t\t\t\"path\" : \""+ fileName +"\",\n" +
                tabs.repeat(nbOfLevel) + "\t\t\t\"type\" : \"file\",\n" +
-               tabs.repeat(nbOfLevel) + "\t\t\t\"score\" : \"1\",\n" +
+               tabs.repeat(nbOfLevel) + "\t\t\t\"score\" : \""+ fileScore +"\",\n" +
                tabs.repeat(nbOfLevel) + "\t\t\t\"content\" : [\n" +
                tabs.repeat(nbOfLevel) +  "\t\t\t\t{\n" +
                tabs.repeat(nbOfLevel) + "\t\t\t\t}\n" +
                tabs.repeat(nbOfLevel) + "\t\t\t]\n";
     }
 
-    private String GenerateDirectoryDescription(String fileName, File directory) {
+    private String GenerateDirectoryDescription(String fileName, File directory) throws IOException {
 
         String description = GenerateJSONContent(directory.getPath());
         return tabs.repeat(nbOfLevel) +"\t\"path\" : \""+ fileName +"\",\n" +

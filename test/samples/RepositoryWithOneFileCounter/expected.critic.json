@@ -1,0 +1,16 @@
+{
+	"path" : "test/samples/RepositoryWithOneFileCounter",
+	"type" : "directory",
+	"score" : "1",
+	"content" : [
+		{
+			"path" : "firstFile.txt",
+			"type" : "file",
+			"score" : "3",
+			"content" : [
+				{
+				}
+			]
+		}
+	]
+}
