@@ -3,11 +3,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Critic {
     private String repositoryPath;
-    public int nbOfLevel =0;
+    public int nbOfLevel = 0 ;
+    public String tabs = "\t\t";
 
     public Critic(String repositoryPath) {
         this.repositoryPath = repositoryPath;
@@ -31,11 +34,9 @@ public class Critic {
         File criticNewFile = new File(path + "/critic.json");
         criticNewFile.createNewFile();
         FileOutputStream fileWriter = new FileOutputStream(criticNewFile);
-        int indexOfRepositoryName = path.lastIndexOf("/");
-        String repositoryName = path.substring(indexOfRepositoryName+1);
         fileWriter.write(GenerateJSON(path).getBytes());
     }
-    
+
     private ArrayList<File> shallFileBeAnalyzed(File[] filesInRepository) {
         ArrayList<File> filesToAnalyze = new ArrayList<>();
         for (int i = 0 ; i < filesInRepository.length; i++) {
@@ -52,28 +53,7 @@ public class Critic {
     }
 
     private String GenerateJSON(String path) {
-        String content = "";
-
-        File repository = new File(path);
-        File[] filesInRepository = repository.listFiles();
-
-        ArrayList<File> filesToAnalyze = shallFileBeAnalyzed(filesInRepository);
-
-        for (int i = 0 ; i < filesToAnalyze.size(); i++) {
-            String fileName = filesToAnalyze.get(i).getName();
-            if (filesToAnalyze.get(i).isDirectory()){
-                File[] subfilesList = filesToAnalyze.get(i).listFiles();
-                content += GenerateDirectoryDescription(fileName, subfilesList);
-            }
-            else {
-                content += GenerateFileDescription(fileName);
-                if(i<filesToAnalyze.size()-1) {
-                    content += "\t\t},\n" +
-                            "\t\t{\n";
-                }
-            }
-        }
-
+        String content = GenerateJSONContent(path);
         return "{\n" +
                 "\t\"path\" : \""+ path +"\",\n" +
                 "\t\"type\" : \"directory\",\n" +
@@ -86,8 +66,38 @@ public class Critic {
                 "}\n";
     }
 
+    private String GenerateJSONContent(String path) {
+        StringBuilder content = new StringBuilder();
+        File repository = new File(path);
+        File[] filesInRepository = repository.listFiles();
+
+        ArrayList<File> filesToAnalyze = shallFileBeAnalyzed(filesInRepository);
+
+        Path rootPath = Paths.get(repositoryPath);
+        int nbElementInRootPath = rootPath.getNameCount();
+
+        for (int i = 0 ; i < filesToAnalyze.size(); i++) {
+            String fileName = filesToAnalyze.get(i).getName();
+
+            if (filesToAnalyze.get(i).isDirectory()){
+                File directory = filesToAnalyze.get(i);
+
+                Path folderpath = Paths.get(directory.getPath());
+                nbOfLevel = folderpath.getNameCount() - nbElementInRootPath;
+                content.append(GenerateDirectoryDescription(fileName, directory));
+                nbOfLevel = nbOfLevel-1;
+            }
+            else {
+                content.append(GenerateFileDescription(fileName));
+                if(i<filesToAnalyze.size()-1) {
+                    content.append(tabs.repeat(nbOfLevel)).append("\t\t},\n").append(tabs.repeat(nbOfLevel)).append("\t\t{\n");
+                }
+            }
+        }
+        return content.toString();
+    }
+
     private String GenerateFileDescription(String fileName) {
-        String tabs = "\t\t";
         return tabs.repeat(nbOfLevel) + "\t\t\t\"path\" : \""+ fileName +"\",\n" +
                tabs.repeat(nbOfLevel) + "\t\t\t\"type\" : \"file\",\n" +
                tabs.repeat(nbOfLevel) + "\t\t\t\"score\" : \"1\",\n" +
@@ -97,34 +107,16 @@ public class Critic {
                tabs.repeat(nbOfLevel) + "\t\t\t]\n";
     }
 
-    private String GenerateDirectoryDescription(String fileName, File[] subfilesList) {
-        nbOfLevel ++ ;
-        return "\t\t\t\"path\" : \""+ fileName +"\",\n" +
-                "\t\t\t\"type\" : \"directory\",\n" +
-                "\t\t\t\"score\" : \"1\",\n" +
-                "\t\t\t\"content\" : [\n" +
-                "\t\t\t\t{\n" +
-                CallSubfilesDescription(subfilesList) +
-                "\t\t\t\t}\n" +
-                "\t\t\t]\n";
+    private String GenerateDirectoryDescription(String fileName, File directory) {
+
+        String description = GenerateJSONContent(directory.getPath());
+        return tabs.repeat(nbOfLevel) +"\t\"path\" : \""+ fileName +"\",\n" +
+                tabs.repeat(nbOfLevel) +"\t\"type\" : \"directory\",\n" +
+                tabs.repeat(nbOfLevel) + "\t\"score\" : \"1\",\n" +
+                tabs.repeat(nbOfLevel) +"\t\"content\" : [\n" +
+                tabs.repeat(nbOfLevel) +"\t\t{\n" +
+                 description +
+                tabs.repeat(nbOfLevel) + "\t\t}\n" +
+                tabs.repeat(nbOfLevel) + "\t]\n";
     }
-
-    private String CallSubfilesDescription(File[] subfilesList) {
-        String description="";
-        for (int i = 0; i < subfilesList.length; i++) {
-            if (subfilesList[i].isFile()) {
-                description += GenerateFileDescription(subfilesList[i].getName());
-                if(i<subfilesList.length-1) {
-                    description += "\t\t\t\t},\n" +
-                            "\t\t\t\t{\n";
-                }
-            }
-            else {
-                description += GenerateDirectoryDescription(subfilesList[i].getName(), subfilesList);
-            }
-
-        }
-        return description;
-    }
-
 }

@@ -123,4 +123,17 @@ public class CriticTest {
         critic.evaluate() ;
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }
+
+    @Test
+    void ComplexTest () throws IOException {
+        String ComplexRootPath = "test/samples/ComplexRoot";
+        String outputCriticJSON = "test/samples/ComplexRoot/critic.json";
+        String expectedCriticJSON = "test/samples/ComplexRoot/expected.critic.json";
+
+        RemoveFile(outputCriticJSON);
+
+        Critic critic = new Critic(ComplexRootPath);
+        critic.evaluate() ;
+        assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
+    }
 }

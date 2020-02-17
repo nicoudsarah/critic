@@ -1,0 +1,57 @@
+{
+	"path" : "test/samples/ComplexRoot",
+	"type" : "directory",
+	"score" : "1",
+	"content" : [
+		{
+			"path" : "firstFile1.txt",
+			"type" : "file",
+			"score" : "1",
+			"content" : [
+				{
+				}
+			]
+		},
+		{
+			"path" : "SubFolder1",
+			"type" : "directory",
+			"score" : "1",
+			"content" : [
+				{
+					"path" : "firstFile2.txt",
+					"type" : "file",
+					"score" : "1",
+					"content" : [
+						{
+						}
+					]
+				},
+				{
+					"path" : "secondFile2.txt",
+					"type" : "file",
+					"score" : "1",
+					"content" : [
+						{
+						}
+					]
+				},
+				{
+					"path" : "SubFolder2",
+					"type" : "directory",
+					"score" : "1",
+					"content" : [
+						{
+							"path" : "firstFile3.txt",
+							"type" : "file",
+							"score" : "1",
+							"content" : [
+								{
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
