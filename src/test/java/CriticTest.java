@@ -136,4 +136,17 @@ public class CriticTest {
         critic.evaluate() ;
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }
+
+    @Test
+    void ThreeSubfolders () throws IOException {
+        String ThreeSubfoldersPath = "test/samples/ThreeSubfolders";
+        String outputCriticJSON = "test/samples/ThreeSubfolders/critic.json";
+        String expectedCriticJSON = "test/samples/ThreeSubfolders/expected.critic.json";
+
+        RemoveFile(outputCriticJSON);
+
+        Critic critic = new Critic(ThreeSubfoldersPath);
+        critic.evaluate() ;
+        assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
+    }
 }

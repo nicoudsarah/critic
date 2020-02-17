@@ -1,0 +1,64 @@
+{
+	"path" : "test/samples/ThreeSubfolders",
+	"type" : "directory",
+	"score" : "1",
+	"content" : [
+		{
+			"path" : "firstFile1.txt",
+			"type" : "file",
+			"score" : "1",
+			"content" : [
+				{
+				}
+			]
+		},
+		{
+			"path" : "SubFolder1",
+			"type" : "directory",
+			"score" : "1",
+			"content" : [
+				{
+					"path" : "firstFile2.txt",
+					"type" : "file",
+					"score" : "1",
+					"content" : [
+						{
+						}
+					]
+				},
+				{
+					"path" : "SubFolder2",
+					"type" : "directory",
+					"score" : "1",
+					"content" : [
+						{
+							"path" : "firstFile3.txt",
+							"type" : "file",
+							"score" : "1",
+							"content" : [
+								{
+								}
+							]
+						},
+						{
+							"path" : "SubFolder3",
+							"type" : "directory",
+							"score" : "1",
+							"content" : [
+								{
+									"path" : "firstFile4.txt",
+									"type" : "file",
+									"score" : "1",
+									"content" : [
+										{
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
