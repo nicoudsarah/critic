@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -159,6 +160,20 @@ public class CriticTest {
         RemoveFile(outputCriticJSON);
 
         Critic critic = new Critic(RepositoryWithOneFileCounterPath);
+        critic.evaluate() ;
+        assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
+    }
+
+    @Disabled
+    @Test
+    void RepositoryWithOneFolderScore () throws IOException {
+        String RepositoryWithOneFolderScorePath = "test/samples/RepositoryWithOneFolderScore";
+        String outputCriticJSON = "test/samples/RepositoryWithOneFolderScore/critic.json";
+        String expectedCriticJSON = "test/samples/RepositoryWithOneFolderScore/expected.critic.json";
+
+        RemoveFile(outputCriticJSON);
+
+        Critic critic = new Critic(RepositoryWithOneFolderScorePath);
         critic.evaluate() ;
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }

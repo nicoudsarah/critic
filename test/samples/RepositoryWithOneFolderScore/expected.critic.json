@@ -1,0 +1,25 @@
+{
+	"path" : "test/samples/RepositoryWithOneFolderScore",
+	"type" : "directory",
+	"score" : "6",
+	"content" : [
+		{
+			"path" : "firstFile.txt",
+			"type" : "file",
+			"score" : "3",
+			"content" : [
+				{
+				}
+			]
+		},
+		{
+			"path" : "secondFile.txt",
+			"type" : "file",
+			"score" : "3",
+			"content" : [
+				{
+				}
+			]
+		}
+	]
+}
