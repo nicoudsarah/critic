@@ -8,6 +8,7 @@ public class Critic {
     private String repositoryPath;
     public int nbOfLevel = 0 ;
     public String tabs = "\t\t";
+    public int score = 1;
 
     public Critic(String repositoryPath) {
         this.repositoryPath = repositoryPath;
@@ -51,10 +52,7 @@ public class Critic {
 
     private String GenerateJSON(String path) throws IOException {
         String content = GenerateJSONContent(path);
-        int score = 1;
-        if(path.endsWith("RepositoryWithOneFileCounter")){
-            score = 3;
-        }
+
         return "{\n" +
                 "\t\"path\" : \""+ path +"\",\n" +
                 "\t\"type\" : \"directory\",\n" +
@@ -101,7 +99,7 @@ public class Critic {
     }
 
     private int getScore(ArrayList<File> filesToAnalyze, int i) throws IOException {
-        int score = 0;
+        score = 0;
         BufferedReader fileEvaluation = new BufferedReader(new FileReader(filesToAnalyze.get(i).getPath()));
         while(fileEvaluation.readLine() != null){
             score ++;
