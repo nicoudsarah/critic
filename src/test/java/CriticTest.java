@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -163,8 +162,7 @@ public class CriticTest {
         critic.evaluate() ;
         assertTrue(FilesContentsAreEquals(expectedCriticJSON, outputCriticJSON));
     }
-
-    @Disabled
+    
     @Test
     void RepositoryWithOneFolderScore () throws IOException {
         String RepositoryWithOneFolderScorePath = "test/samples/RepositoryWithOneFolderScore";

@@ -1,7 +1,7 @@
 {
 	"path" : "test/samples/RepositoryContainsSubfolderWhichContainsTwoFiles",
 	"type" : "directory",
-	"score" : "1",
+	"score" : "2",
 	"content" : [
 		{
 			"path" : "SubFolderWithTwoFiles",

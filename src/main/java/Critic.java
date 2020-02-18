@@ -8,7 +8,7 @@ public class Critic {
     private String repositoryPath;
     public int nbOfLevel = 0 ;
     public String tabs = "\t\t";
-    public int score = 1;
+    public int totalScore = 0;
 
     public Critic(String repositoryPath) {
         this.repositoryPath = repositoryPath;
@@ -56,7 +56,7 @@ public class Critic {
         return "{\n" +
                 "\t\"path\" : \""+ path +"\",\n" +
                 "\t\"type\" : \"directory\",\n" +
-                "\t\"score\" : \""+ score +"\",\n" +
+                "\t\"score\" : \""+ totalScore +"\",\n" +
                 "\t\"content\" : [\n" +
                 "\t\t{\n" +
                 content +
@@ -74,6 +74,7 @@ public class Critic {
 
         Path rootPath = Paths.get(repositoryPath);
         int nbElementInRootPath = rootPath.getNameCount();
+        int score = 0;
 
         for (int i = 0 ; i < filesToAnalyze.size(); i++) {
             String fileName = filesToAnalyze.get(i).getName();
@@ -88,7 +89,8 @@ public class Critic {
                 nbOfLevel = nbOfLevel-1;
             }
             else {
-                int score = getScore(filesToAnalyze, i);
+                score = getScore(filesToAnalyze, i);
+                totalScore += score;
                 content.append(GenerateFileDescription(fileName, score));
                 if(i<filesToAnalyze.size()-1) {
                     content.append(tabs.repeat(nbOfLevel)).append("\t\t},\n").append(tabs.repeat(nbOfLevel)).append("\t\t{\n");
@@ -99,10 +101,10 @@ public class Critic {
     }
 
     private int getScore(ArrayList<File> filesToAnalyze, int i) throws IOException {
-        score = 0;
+        int score = 0;
         BufferedReader fileEvaluation = new BufferedReader(new FileReader(filesToAnalyze.get(i).getPath()));
         while(fileEvaluation.readLine() != null){
-            score ++;
+            score++;
         }
         return score;
     }

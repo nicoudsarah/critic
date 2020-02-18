@@ -1,7 +1,7 @@
 {
 	"path" : "test/samples/ComplexRoot",
 	"type" : "directory",
-	"score" : "1",
+	"score" : "4",
 	"content" : [
 		{
 			"path" : "firstFile1.txt",
