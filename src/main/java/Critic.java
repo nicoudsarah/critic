@@ -6,11 +6,9 @@ import java.util.ArrayList;
 
 public class Critic {
     private String repositoryPath;
-    // TODO : rename it with depth and indent so we known what level is
     // TODO : remove this attribute to pass it as function parameter instead (to avoid side effect)
-    public int nbOfLevel = 0 ;
-    // TODO : make it const :)
-    public String tabs = "\t\t";
+    public int indentationDepth = 0 ;
+    final String tabs = "\t";
 
     public Critic(String repositoryPath) {
         this.repositoryPath = repositoryPath;
@@ -81,13 +79,13 @@ public class Critic {
                 File directory = filesToAnalyze.get(i);
 
                 Path folderpath = Paths.get(directory.getPath());
-                nbOfLevel = folderpath.getNameCount() - nbElementInRootPath;
+                indentationDepth = folderpath.getNameCount() - nbElementInRootPath;
                 FolderDescription folderDescription = GenerateDirectoryDescription(directory);
                 content.append(folderDescription.getJSONContent());
                 descriptionScore += folderDescription.getScore();
                 //XXX Verifier si c'est une rustine
 
-                nbOfLevel = nbOfLevel-1;
+                indentationDepth = indentationDepth -1;
             }
             else {
                 // Create File JSON content
@@ -96,7 +94,7 @@ public class Critic {
                 content.append(GenerateFileDescription(fileName, score));
                 if(i<filesToAnalyze.size()-1) {
                     // TODO : Push { } in GenerateFileDescription. Keep here only logic for commas,
-                    content.append(tabs.repeat(nbOfLevel)).append("\t\t},\n").append(tabs.repeat(nbOfLevel)).append("\t\t{\n");
+                    content.append(tabs.repeat(indentationDepth*2)).append("\t\t},\n").append(tabs.repeat(indentationDepth*2)).append("\t\t{\n");
                 }
             }
         }
@@ -115,16 +113,15 @@ public class Critic {
         return score;
     }
 
-    // TODO : Push all possible tabs inside nbOfLevel
     private String GenerateFileDescription(String fileName, int fileScore) {
-        // TODO : factorize tabs.repeat in a local variable (localIndentDepth)
-        return tabs.repeat(nbOfLevel) + "\t\t\t\"path\" : \""+ fileName +"\",\n" +
-               tabs.repeat(nbOfLevel) + "\t\t\t\"type\" : \"file\",\n" +
-               tabs.repeat(nbOfLevel) + "\t\t\t\"score\" : \""+ fileScore +"\",\n" +
-               tabs.repeat(nbOfLevel) + "\t\t\t\"content\" : [\n" +
-               tabs.repeat(nbOfLevel) +  "\t\t\t\t{\n" +
-               tabs.repeat(nbOfLevel) + "\t\t\t\t}\n" +
-               tabs.repeat(nbOfLevel) + "\t\t\t]\n";
+        String localIndentDepth = tabs.repeat(indentationDepth*2+3);
+        return localIndentDepth + "\"path\" : \""+ fileName +"\",\n" +
+                localIndentDepth + "\"type\" : \"file\",\n" +
+                localIndentDepth + "\"score\" : \""+ fileScore +"\",\n" +
+                localIndentDepth + "\"content\" : [\n" +
+                localIndentDepth + "\t{\n" +
+                localIndentDepth + "\t}\n" +
+                localIndentDepth + "]\n";
     }
 
     private FolderDescription GenerateDirectoryDescription(File directory) throws IOException {
@@ -133,20 +130,21 @@ public class Critic {
         int folderScore = folderDescription.getScore();
         String fileNameDirectory = directory.getName();
 
-        if(nbOfLevel==0) {
+        if(indentationDepth ==0) {
             String filepath = directory.getPath();
             fileNameDirectory = filepath.replace("\\", "/");
         }
 
         FolderDescription returnedDescription = new FolderDescription();
-        String returnedContent = tabs.repeat(nbOfLevel) +"\t\"path\" : \""+ fileNameDirectory +"\",\n" +
-                tabs.repeat(nbOfLevel) +"\t\"type\" : \"directory\",\n" +
-                tabs.repeat(nbOfLevel) + "\t\"score\" : \"" + folderScore + "\",\n" +
-                tabs.repeat(nbOfLevel) +"\t\"content\" : [\n" +
-                tabs.repeat(nbOfLevel) +"\t\t{\n" +
+        String localIndentDepth = tabs.repeat(indentationDepth*2+1);
+        String returnedContent = localIndentDepth +"\"path\" : \""+ fileNameDirectory +"\",\n" +
+                localIndentDepth +"\"type\" : \"directory\",\n" +
+                localIndentDepth +"\"score\" : \"" + folderScore + "\",\n" +
+                localIndentDepth +"\"content\" : [\n" +
+                localIndentDepth +"\t{\n" +
                  description +
-                tabs.repeat(nbOfLevel) + "\t\t}\n" +
-                tabs.repeat(nbOfLevel) + "\t]\n";
+                localIndentDepth + "\t}\n" +
+                localIndentDepth + "]\n";
 
         returnedDescription.setJsonContent(returnedContent);
         returnedDescription.setScore(folderScore);
