@@ -52,9 +52,7 @@ public class Critic {
         File rootFile = new File(path);
         FolderDescription content2 = GenerateDirectoryDescription(rootFile, 0);
 
-        return "{\n" +
-                content2.getJSONContent() +
-                "}\n";
+        return content2.getJSONContent();
     }
 
     private FolderDescription GenerateJSONContent(String path) throws IOException {
@@ -69,30 +67,31 @@ public class Critic {
         int nbElementInRootPath = rootPath.getNameCount();
         int score;
         int descriptionScore = 0;
-        int indentationDepth = 0;
+        int indentationDepth;
 
         for (int i = 0 ; i < filesToAnalyze.size(); i++) {
             String fileName = filesToAnalyze.get(i).getName();
 
             if (filesToAnalyze.get(i).isDirectory()){
                 File directory = filesToAnalyze.get(i);
-
                 Path folderpath = Paths.get(directory.getPath());
                 indentationDepth = folderpath.getNameCount() - nbElementInRootPath;
+
                 FolderDescription folderDescription = GenerateDirectoryDescription(directory, indentationDepth);
                 content.append(folderDescription.getJSONContent());
                 descriptionScore += folderDescription.getScore();
             }
             else {
-                // Create File JSON content
                 Path filePath = Paths.get(filesToAnalyze.get(i).getPath());
                 indentationDepth = filePath.getNameCount() - nbElementInRootPath - 1;
                 score = getScore(filesToAnalyze, i);
                 descriptionScore += score;
                 content.append(GenerateFileDescription(fileName, score, indentationDepth));
                 if(i<filesToAnalyze.size()-1) {
-                    // TODO : Push { } in GenerateFileDescription. Keep here only logic for commas,
-                    content.append(tabs.repeat(indentationDepth*2)).append("\t\t},\n").append(tabs.repeat(indentationDepth*2)).append("\t\t{\n");
+                    content.append(",\n");
+                }
+                else {
+                    content.append("\n");
                 }
             }
         }
@@ -113,13 +112,16 @@ public class Critic {
 
     private String GenerateFileDescription(String fileName, int fileScore, int fileIndentationDepth) {
         String localIndentDepth = tabs.repeat(fileIndentationDepth*2+3);
-        return localIndentDepth + "\"path\" : \""+ fileName +"\",\n" +
+        String bracesIndentDepth = tabs.repeat(fileIndentationDepth*2+2);
+        return  bracesIndentDepth + "{\n" +
+                localIndentDepth + "\"path\" : \""+ fileName +"\",\n" +
                 localIndentDepth + "\"type\" : \"file\",\n" +
                 localIndentDepth + "\"score\" : \""+ fileScore +"\",\n" +
                 localIndentDepth + "\"content\" : [\n" +
                 localIndentDepth + "\t{\n" +
                 localIndentDepth + "\t}\n" +
-                localIndentDepth + "]\n";
+                localIndentDepth + "]\n" +
+                bracesIndentDepth + "}";
     }
 
     private FolderDescription GenerateDirectoryDescription(File directory, int folderIndentationDepth) throws IOException {
@@ -135,14 +137,15 @@ public class Critic {
 
         FolderDescription returnedDescription = new FolderDescription();
         String localIndentDepth = tabs.repeat(folderIndentationDepth*2+1);
-        String returnedContent = localIndentDepth +"\"path\" : \""+ fileNameDirectory +"\",\n" +
+        String bracesLocalIndentDepth = tabs.repeat(folderIndentationDepth*2);
+        String returnedContent = bracesLocalIndentDepth +"{\n" +
+                localIndentDepth +"\"path\" : \""+ fileNameDirectory +"\",\n" +
                 localIndentDepth +"\"type\" : \"directory\",\n" +
                 localIndentDepth +"\"score\" : \"" + folderScore + "\",\n" +
                 localIndentDepth +"\"content\" : [\n" +
-                localIndentDepth +"\t{\n" +
                  description +
-                localIndentDepth + "\t}\n" +
-                localIndentDepth + "]\n";
+                localIndentDepth + "]\n"+
+                bracesLocalIndentDepth +"}\n";
 
         returnedDescription.setJsonContent(returnedContent);
         returnedDescription.setScore(folderScore);
