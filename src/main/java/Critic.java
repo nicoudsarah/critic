@@ -51,17 +51,11 @@ public class Critic {
     }
 
     private String GenerateJSON(String path) throws IOException {
-        FolderDescription content = GenerateJSONContent(path);
+        File rootFile = new File(path);
+        FolderDescription content2 = GenerateDirectoryDescription(path, rootFile);
 
         return "{\n" +
-                "\t\"path\" : \""+ path +"\",\n" +
-                "\t\"type\" : \"directory\",\n" +
-                "\t\"score\" : \""+ totalScore +"\",\n" +
-                "\t\"content\" : [\n" +
-                "\t\t{\n" +
-                content.getJSONContent() +
-                "\t\t}\n" +
-                "\t]\n" +
+                content2.getJSONContent() +
                 "}\n";
     }
 
