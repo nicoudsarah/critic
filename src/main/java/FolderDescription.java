@@ -1,6 +1,7 @@
 public class FolderDescription {
     private String jsonContent;
     private int score;
+    private int indentationDepth;
 
     public void setScore(int score) {
         this.score = score;
@@ -17,4 +18,5 @@ public class FolderDescription {
     public String getJSONContent() {
         return jsonContent;
     }
+
 }
