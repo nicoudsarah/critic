@@ -6,7 +6,10 @@ import java.util.ArrayList;
 
 public class Critic {
     private String repositoryPath;
+    // TODO : rename it with depth and indent so we known what level is
+    // TODO : remove this attribute to pass it as function parameter instead (to avoid side effect)
     public int nbOfLevel = 0 ;
+    // TODO : make it const :)
     public String tabs = "\t\t";
 
     public Critic(String repositoryPath) {
@@ -51,7 +54,7 @@ public class Critic {
 
     private String GenerateJSON(String path) throws IOException {
         File rootFile = new File(path);
-        FolderDescription content2 = GenerateDirectoryDescription(path, rootFile);
+        FolderDescription content2 = GenerateDirectoryDescription(rootFile);
 
         return "{\n" +
                 content2.getJSONContent() +
@@ -79,7 +82,7 @@ public class Critic {
 
                 Path folderpath = Paths.get(directory.getPath());
                 nbOfLevel = folderpath.getNameCount() - nbElementInRootPath;
-                FolderDescription folderDescription = GenerateDirectoryDescription(fileName, directory);
+                FolderDescription folderDescription = GenerateDirectoryDescription(directory);
                 content.append(folderDescription.getJSONContent());
                 descriptionScore += folderDescription.getScore();
                 //XXX Verifier si c'est une rustine
@@ -87,10 +90,12 @@ public class Critic {
                 nbOfLevel = nbOfLevel-1;
             }
             else {
+                // Create File JSON content
                 score = getScore(filesToAnalyze, i);
                 descriptionScore += score;
                 content.append(GenerateFileDescription(fileName, score));
                 if(i<filesToAnalyze.size()-1) {
+                    // TODO : Push { } in GenerateFileDescription. Keep here only logic for commas,
                     content.append(tabs.repeat(nbOfLevel)).append("\t\t},\n").append(tabs.repeat(nbOfLevel)).append("\t\t{\n");
                 }
             }
@@ -110,7 +115,9 @@ public class Critic {
         return score;
     }
 
+    // TODO : Push all possible tabs inside nbOfLevel
     private String GenerateFileDescription(String fileName, int fileScore) {
+        // TODO : factorize tabs.repeat in a local variable (localIndentDepth)
         return tabs.repeat(nbOfLevel) + "\t\t\t\"path\" : \""+ fileName +"\",\n" +
                tabs.repeat(nbOfLevel) + "\t\t\t\"type\" : \"file\",\n" +
                tabs.repeat(nbOfLevel) + "\t\t\t\"score\" : \""+ fileScore +"\",\n" +
@@ -120,13 +127,19 @@ public class Critic {
                tabs.repeat(nbOfLevel) + "\t\t\t]\n";
     }
 
-    private FolderDescription GenerateDirectoryDescription(String fileName, File directory) throws IOException {
+    private FolderDescription GenerateDirectoryDescription(File directory) throws IOException {
         FolderDescription folderDescription =  GenerateJSONContent(directory.getPath());;
         String description = folderDescription.getJSONContent();
         int folderScore = folderDescription.getScore();
+        String fileNameDirectory = directory.getName();
+
+        if(nbOfLevel==0) {
+            String filepath = directory.getPath();
+            fileNameDirectory = filepath.replace("\\", "/");
+        }
 
         FolderDescription returnedDescription = new FolderDescription();
-        String returnedContent = tabs.repeat(nbOfLevel) +"\t\"path\" : \""+ fileName +"\",\n" +
+        String returnedContent = tabs.repeat(nbOfLevel) +"\t\"path\" : \""+ fileNameDirectory +"\",\n" +
                 tabs.repeat(nbOfLevel) +"\t\"type\" : \"directory\",\n" +
                 tabs.repeat(nbOfLevel) + "\t\"score\" : \"" + folderScore + "\",\n" +
                 tabs.repeat(nbOfLevel) +"\t\"content\" : [\n" +
