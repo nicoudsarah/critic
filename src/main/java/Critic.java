@@ -8,7 +8,6 @@ public class Critic {
     private String repositoryPath;
     public int nbOfLevel = 0 ;
     public String tabs = "\t\t";
-    public int totalScore = 0;
 
     public Critic(String repositoryPath) {
         this.repositoryPath = repositoryPath;
@@ -90,7 +89,6 @@ public class Critic {
             else {
                 score = getScore(filesToAnalyze, i);
                 descriptionScore += score;
-                totalScore += score;
                 content.append(GenerateFileDescription(fileName, score));
                 if(i<filesToAnalyze.size()-1) {
                     content.append(tabs.repeat(nbOfLevel)).append("\t\t},\n").append(tabs.repeat(nbOfLevel)).append("\t\t{\n");
