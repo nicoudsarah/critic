@@ -1,7 +1,7 @@
 {
 	"path" : "test/samples/ThreeSubfolders",
 	"type" : "directory",
-	"score" : "1",
+	"score" : "4",
 	"content" : [
 		{
 			"path" : "firstFile1.txt",
@@ -15,7 +15,7 @@
 		{
 			"path" : "SubFolder1",
 			"type" : "directory",
-			"score" : "1",
+			"score" : "3",
 			"content" : [
 				{
 					"path" : "firstFile2.txt",
@@ -29,7 +29,7 @@
 				{
 					"path" : "SubFolder2",
 					"type" : "directory",
-					"score" : "1",
+					"score" : "2",
 					"content" : [
 						{
 							"path" : "firstFile3.txt",

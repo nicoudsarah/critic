@@ -15,7 +15,7 @@
 		{
 			"path" : "SubFolder1",
 			"type" : "directory",
-			"score" : "1",
+			"score" : "3",
 			"content" : [
 				{
 					"path" : "firstFile2.txt",

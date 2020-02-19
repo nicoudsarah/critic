@@ -51,7 +51,7 @@ public class Critic {
     }
 
     private String GenerateJSON(String path) throws IOException {
-        String content = GenerateJSONContent(path);
+        FolderDescription content = GenerateJSONContent(path);
 
         return "{\n" +
                 "\t\"path\" : \""+ path +"\",\n" +
@@ -59,13 +59,14 @@ public class Critic {
                 "\t\"score\" : \""+ totalScore +"\",\n" +
                 "\t\"content\" : [\n" +
                 "\t\t{\n" +
-                content +
+                content.getJSONContent() +
                 "\t\t}\n" +
                 "\t]\n" +
                 "}\n";
     }
 
-    private String GenerateJSONContent(String path) throws IOException {
+    private FolderDescription GenerateJSONContent(String path) throws IOException {
+        FolderDescription description = new FolderDescription();
         StringBuilder content = new StringBuilder();
         File repository = new File(path);
         File[] filesInRepository = repository.listFiles();
@@ -75,6 +76,7 @@ public class Critic {
         Path rootPath = Paths.get(repositoryPath);
         int nbElementInRootPath = rootPath.getNameCount();
         int score = 0;
+        int descriptionScore = 0;
 
         for (int i = 0 ; i < filesToAnalyze.size(); i++) {
             String fileName = filesToAnalyze.get(i).getName();
@@ -84,12 +86,16 @@ public class Critic {
 
                 Path folderpath = Paths.get(directory.getPath());
                 nbOfLevel = folderpath.getNameCount() - nbElementInRootPath;
-                content.append(GenerateDirectoryDescription(fileName, directory));
+                FolderDescription folderDescription = GenerateDirectoryDescription(fileName, directory);
+                content.append(folderDescription.getJSONContent());
+                descriptionScore += folderDescription.getScore();
                 //XXX Verifier si c'est une rustine
+
                 nbOfLevel = nbOfLevel-1;
             }
             else {
                 score = getScore(filesToAnalyze, i);
+                descriptionScore += score;
                 totalScore += score;
                 content.append(GenerateFileDescription(fileName, score));
                 if(i<filesToAnalyze.size()-1) {
@@ -97,7 +103,10 @@ public class Critic {
                 }
             }
         }
-        return content.toString();
+        description.setJsonContent(content.toString());
+        description.setScore(descriptionScore);
+
+        return description;
     }
 
     private int getScore(ArrayList<File> filesToAnalyze, int i) throws IOException {
@@ -119,16 +128,23 @@ public class Critic {
                tabs.repeat(nbOfLevel) + "\t\t\t]\n";
     }
 
-    private String GenerateDirectoryDescription(String fileName, File directory) throws IOException {
+    private FolderDescription GenerateDirectoryDescription(String fileName, File directory) throws IOException {
+        FolderDescription folderDescription =  GenerateJSONContent(directory.getPath());;
+        String description = folderDescription.getJSONContent();
+        int folderScore = folderDescription.getScore();
 
-        String description = GenerateJSONContent(directory.getPath());
-        return tabs.repeat(nbOfLevel) +"\t\"path\" : \""+ fileName +"\",\n" +
+        FolderDescription returnedDescription = new FolderDescription();
+        String returnedContent = tabs.repeat(nbOfLevel) +"\t\"path\" : \""+ fileName +"\",\n" +
                 tabs.repeat(nbOfLevel) +"\t\"type\" : \"directory\",\n" +
-                tabs.repeat(nbOfLevel) + "\t\"score\" : \"1\",\n" +
+                tabs.repeat(nbOfLevel) + "\t\"score\" : \"" + folderScore + "\",\n" +
                 tabs.repeat(nbOfLevel) +"\t\"content\" : [\n" +
                 tabs.repeat(nbOfLevel) +"\t\t{\n" +
                  description +
                 tabs.repeat(nbOfLevel) + "\t\t}\n" +
                 tabs.repeat(nbOfLevel) + "\t]\n";
+
+        returnedDescription.setJsonContent(returnedContent);
+        returnedDescription.setScore(folderScore);
+        return returnedDescription;
     }
 }
