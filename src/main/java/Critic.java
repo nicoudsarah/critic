@@ -51,7 +51,6 @@ public class Critic {
     private String GenerateJSON(String path) throws IOException {
         File rootFile = new File(path);
         FolderDescription content2 = GenerateDirectoryDescription(rootFile, 0);
-
         return content2.getJSONContent();
     }
 
@@ -125,7 +124,7 @@ public class Critic {
     }
 
     private FolderDescription GenerateDirectoryDescription(File directory, int folderIndentationDepth) throws IOException {
-        FolderDescription folderDescription =  GenerateJSONContent(directory.getPath());;
+        FolderDescription folderDescription =  GenerateJSONContent(directory.getPath());
         String description = folderDescription.getJSONContent();
         int folderScore = folderDescription.getScore();
         String fileNameDirectory = directory.getName();
